@@ -96,10 +96,10 @@ else:
         })
 
 # --------------------------------------------------------------------
-# TAB LAYOUT
+# TAB LAYOUT  (FIXED — Added "Team Members")
 # --------------------------------------------------------------------
-tab_overview, tab_pca, tab_olap, tab_stock, tab_anonymize = st.tabs(
-    ["Overview", "PCA (Dimensionality Reduction)", "OLAP Trends", "Stock Adequacy", "Anonymize & Download"]
+tab_overview, tab_pca, tab_olap, tab_stock, tab_anonymize, tab_team = st.tabs(
+    ["Overview", "PCA (Dimensionality Reduction)", "OLAP Trends", "Stock Adequacy", "Anonymize & Download", "Team Members"]
 )
 
 # --------------------------------------------------------------------
@@ -250,3 +250,30 @@ with tab_anonymize:
             file_name="anonymized_healthcare_data.csv",
             mime="text/csv"
         )
+
+# --------------------------------------------------------------------
+# TAB 6: TEAM MEMBERS 
+# --------------------------------------------------------------------
+with tab_team:
+    st.subheader("Project Team Members")
+
+    team_data = {
+        "Registration Number": [
+            "ST62/80168/2024",
+            "ST62/80313/2024",
+            "ST62/80195/2024",
+            "ST62/80774/2024",
+            "ST62/80472/2024"
+        ],
+        "Name": [
+            "Gabriel Ndunda",
+            "Donsy Ombura",
+            "Leonard Kiti",
+            "Josephat Motonu",
+            "Tabitha Kiarie"
+        ]
+    }
+
+    df_team = pd.DataFrame(team_data)
+
+    st.table(df_team)
