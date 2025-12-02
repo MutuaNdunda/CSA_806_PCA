@@ -13,9 +13,9 @@ st.title("Nairobi County Healthcare Analytics Dashboard (PCA + OLAP + Anonymizat
 # LOAD DATA (optimized for larger dataset)
 # --------------------------------------------------------------------
 @st.cache_data
-def load_data(path="data/healthcare_simulated_data.csv"):
-    df_local = pd.read_csv(path, parse_dates=["Date"])
-    return df_local
+def load_data():
+    url = "https://raw.githubusercontent.com/MutuaNdunda/CSA_806_PCA/refs/heads/main/data/healthcare_simulated_data.csv"
+    return pd.read_csv(url, parse_dates=["Date"])
 
 df = load_data()
 
@@ -109,16 +109,21 @@ with tab_overview:
     st.subheader("Filtered Dataset Preview")
     st.dataframe(filtered_df.head(20))
 
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Total Attendance", int(filtered_df["Attendance"].sum()) if len(filtered_df) else 0)
-    col2.metric("Total Medication Used", int(filtered_df["MedicationUsed"].sum()) if len(filtered_df) else 0)
-    col3.metric("Avg Medication Stock", round(filtered_df["MedicationStock"].mean(), 2) if len(filtered_df) else 0)
+    # Compute summary metrics
+    total_attendance = filtered_df["Attendance"].sum()
+    total_medication_used = filtered_df["MedicationUsed"].sum()
+    avg_stock = filtered_df["MedicationStock"].mean()
 
-    if len(filtered_df):
-        st.subheader("Daily Attendance Trend (Aggregated Across Clinics & Ailments)")
-        daily_attendance = filtered_df.groupby("Date", as_index=False)["Attendance"].sum()
-        fig_daily = px.line(daily_attendance, x="Date", y="Attendance", markers=True, title="Daily Attendance")
-        st.plotly_chart(fig_daily, use_container_width=True)
+    # Format numbers with commas and 2 decimal places
+    total_attendance_fmt = f"{total_attendance:,.0f}"
+    total_medication_fmt = f"{total_medication_used:,.0f}"
+    avg_stock_fmt = f"{avg_stock:,.2f}"
+
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Total Attendance", total_attendance_fmt)
+    col2.metric("Total Medication Used", total_medication_fmt)
+    col3.metric("Avg Medication Stock", avg_stock_fmt)
+
 
 # --------------------------------------------------------------------
 # TAB 2: PCA ANALYSIS
